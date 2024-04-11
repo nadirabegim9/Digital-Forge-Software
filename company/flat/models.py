@@ -25,11 +25,11 @@ class Apartment(models.Model):
     square_meters = models.FloatField(verbose_name='Кв м квартиры')
     date = models.DateField(verbose_name='Дата')
     price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name='Цена')
-    client = models.ForeignKey('Client', on_delete=models.CASCADE, null=True, blank=True, related_name='client')  # Default to the first client
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, null=True, blank=True, related_name='client')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Активно')
 
     def __str__(self):
-        return f"Apartment {self.id} --- {self.status}"
+        return f"Apartment {self.id} --- {self.status} --- {self.client}"
 
 
 class Client(models.Model):
@@ -48,13 +48,20 @@ class Client(models.Model):
     apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, related_name='apartment', default=None)
 
     def __str__(self):
-        return f"Client - {self.full_name} --- {self.status}"
+        return self.full_name
 
 
 @receiver(post_save, sender=Client)
 def update_apartment_status(sender, instance, **kwargs):
     if instance.apartment:
         instance.apartment.status = instance.status
+        instance.apartment.save()
+
+
+@receiver(post_save, sender=Client)
+def update_apartment_client(sender, instance, **kwargs):
+    if instance.apartment:
+        instance.apartment.client = instance
         instance.apartment.save()
 
 

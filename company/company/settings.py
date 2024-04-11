@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure-q4@zuo#im(ohs*3)m&(w2wfk5au3=ua)emi0_*czlub%d_78mc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-APP_NAME = os.environ.get("FLY_APP_NAME")
-ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]  # ← Updated!
+ALLOWED_HOSTS = ['.vercel.app']
 
 # Application definition
 
